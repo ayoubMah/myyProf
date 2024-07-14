@@ -44,7 +44,7 @@ export const downloadPDF = (fileName: string) => {
     link.download = fileName || 'resume.pdf';
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
-  
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
