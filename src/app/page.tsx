@@ -18,7 +18,7 @@ export default function Page() {
 
     const handleDownload = () => {
         const fileName = 'Aditya_Resume.pdf'; // Desired filename
-        downloadPDF(fileName); 
+        downloadPDF(fileName);
     }
 
     return (
@@ -63,7 +63,7 @@ export default function Page() {
                         type="button"
                         size="sm"
                         className="px-2"
-                        onClick={handleDownload} 
+                        onClick={handleDownload}
                     >
                         Download CV
                     </Button>
