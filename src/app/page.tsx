@@ -1,3 +1,5 @@
+'use client';
+
 import { HackathonCard } from "@/components/hackathon-card";
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
@@ -8,10 +10,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DATA } from "@/data/resume";
 import Markdown from "react-markdown";
+import { downloadPDF } from "@/lib/utils";
 
 const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
+
+    const handleDownload = () => {
+        const fileName = 'Aditya_Resume.pdf'; // Desired filename
+        downloadPDF(fileName); 
+    }
 
     return (
         <main className="flex flex-col min-h-[100dvh] space-y-10">
@@ -55,6 +63,7 @@ export default function Page() {
                         type="button"
                         size="sm"
                         className="px-2"
+                        onClick={handleDownload} 
                     >
                         Download CV
                     </Button>

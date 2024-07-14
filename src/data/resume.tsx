@@ -98,7 +98,7 @@ export const DATA = {
             start: "November 2019",
             end: "February 2022",
             description:
-                "As a Devops Engineer built multiple innovative tools and worked on multiple Cloud Migrations from On-Prem to Cloud.",
+                "As a Devops Engineer built multiple automation tools and worked on multiple Cloud Migrations from On-Prem to Cloud.",
             tech: ["Golang", "AWS Lambda", "Serverless Architecture", "Docker", "Kubernetes", "Helm", "GitOps", "AWS", "GKE", "Node.js", "CI/CD", "Spring Boot"]
         },
         {
@@ -111,7 +111,7 @@ export const DATA = {
             start: "July 2018",
             end: "October 2019",
             description:
-                "Worked on multiple Complex Third-Party banking integrations and automation tools.",
+                "Worked on multiple Complex Third-Party banking integrations and maintaining automation tools.",
             tech: ["Java", "Javascript", "SQL", "Integrations"]
         }
     ],
