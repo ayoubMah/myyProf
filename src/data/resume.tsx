@@ -32,6 +32,7 @@ export const DATA = {
     ],
     navbar: [
         { href: "/", icon: HomeIcon, label: "Home" },
+        { href: "/blog", icon: NotebookIcon, label: "Blog" },
         { href: "#projects", icon: CodeIcon, label: "Projects" },
     ],
     contact: {
@@ -132,7 +133,7 @@ export const DATA = {
             dates: "Jan 2022 - Oct 2023",
             active: true,
             description:
-                "A straightforward Golang validation library based on the core OpenAPI Specification (OAS). Inspired by the OAS approach, it facilitates the creation of generic structs and ensures comprehensive validation according to OAS standards.",
+                "An Open-Source Golang structs validation library based on the core OpenAPI Specification (OAS). Inspired by the OAS approach, it facilitates the creation of generic structs and ensures comprehensive validation according to OAS standards.",
             technologies: [
                 "Golang"
             ],
@@ -153,7 +154,7 @@ export const DATA = {
             dates: "Jan 2022 - Present",
             active: true,
             description:
-                "A simple and powerful SDK for building Golang Applications.",
+                "An Open-Source simple and powerful SDK for building Golang Applications.",
             technologies: [
                 "Golang"
             ],
@@ -169,5 +170,5 @@ export const DATA = {
                 "",
         },
     ],
-    hackathons: [],
+    hackathons: []
 } as const;
