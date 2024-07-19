@@ -71,7 +71,6 @@ export function BlogsMarquee() {
         async function fetchArticles() {
             const blogsList: any[] = []
             const response = await fetch("https://dev.to/api/articles?username=adi73").then(resp => resp.json());
-            console.log(response);
             response.map((item: any) => {
                 blogsList.push({
                     img: "https://avatar.vercel.sh/AK",
