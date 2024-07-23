@@ -74,7 +74,6 @@ export const DATA = {
             },
         },
     },
-
     work: [
         {
             company: "MiRus, LLC",
