@@ -1,0 +1,138 @@
+---
+title: "Deep Dive into Golly: turbo"
+publishedAt: "2024-07-24"
+summary: "golly: turbo part - 1"
+---
+
+Hello Developers,
+
+Building servers is the backbone of any application irrespective of its scale. At the heart of any web application is an HTTP Server - a crucial component responsible for consuming requests and generate desired responses over the internet.
+
+Golang is a widely used server programming language and we can build fast, reliable and flexible HTTP Servers to help our web applications at scale. With this idea in mind, we have build **turbo**, a light weight  router that can help you get started with minimal efforts.
+
+Turbo - [Readme Link](https://github.com/nandlabs/golly/blob/main/turbo/README.md)
+
+With the scope of this blog, we would be discussing on how to build a basic server using **turbo** and how to can provide configurations to the server.
+
+---
+
+## Setup your project
+
+### 1. Check your go environment
+Ensure you have go installed
+```
+go version
+```
+
+### 2. Create a new project
+```
+mkdir testProject
+cd testProject
+```
+
+### 3. Initialise Go Module
+You can keep the name of the module same as your project or you can select a custom. It will create a `go.mod` file based on the module defined in the command
+```
+go mod init myModule
+```
+
+### 4. Install golly package
+you would be required to install the golly package in order to use the turbo library
+```
+go get oss.nandlabs.io/golly
+```
+
+Your `go.mod` file would like below
+```
+module myModule
+
+go 1.22.4
+
+require oss.nandlabs.io/golly v1.0.0
+```
+
+---
+
+## Start building a simple server using turbo
+
+### 1. Create a Main Go file
+```
+touch main.go
+```
+
+### 2. Write your simple server following the instructions
+```
+package main
+
+import (
+	"log"
+	"net/http"
+	"time"
+
+	"oss.nandlabs.io/golly/turbo"
+)
+
+func main() {
+	// register the router by creating the turbo object
+	router := turbo.NewRouter()
+
+	// add a GET endpoint to your server by providing the "endpoint" and handler function
+	router.Get("/api/v1/healthz", healthCheck)
+
+	// create the http.Server object and register the router as Handler
+	// provide the necessary configurations such as PORT, ReadTimeout, WriteTimeout...
+	srv := &http.Server{
+		Handler:      router,
+		Addr:         ":8080",
+		ReadTimeout:  20 * time.Second,
+		WriteTimeout: 20 * time.Second,
+	}
+
+	// to start the server, invoke the ListenAndServe method
+	if err := srv.ListenAndServe(); err != nil {
+		log.Fatalln(err)
+	}
+}
+
+func healthCheck(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("server is up and running"))
+	w.WriteHeader(http.StatusOK)
+}
+```
+
+A few things to note,
+1. Creating the router object, `turbo.NewRouter()` creates a new object and returns the object of the router
+2. You use that router object and register your desired routes in your server. Multiple methods have been exposed and detailed explanation can be found in the **turbo** documentation.
+
+### 3. Running your server
+```
+go run main.go
+```
+Running the server will generate the logs like below
+```
+[timestamp] INFO Initiating Turbo
+[timestamp] INFO Registering New Route: /api/v1/healthz
+```
+You can see the list of registered routes on your server
+
+### 4. Invoking your API
+```
+curl http://localhost:8080/api/v1/healthz
+```
+generates the following response
+> server is up and running
+
+---
+
+### Contributing
+
+- Any suggestions to improve the library are welcomed, we want this to be a community driven project and help it grow.
+- If you feel any improvements in the package, feel free to raise the PR - [Project](https://github.com/nandlabs/golly/tree/main)
+- If you find any bugs that we may have missed, feel free to raise the issues - [Raise an Issue](https://github.com/nandlabs/golly/blob/main/.github/ISSUE_TEMPLATE/bug_report.md)
+- Looking forward to your contributions..
+
+### Project Details
+[Project Link] - (https://github.com/nandlabs/golly)
+
+This was a basic server registration and a simple GET endpoint implementation using **turbo**.
+There are a lot of customisations and features which we will discuss in the coming parts of **turbo** in the series.
