@@ -20,30 +20,30 @@ With the scope of this blog, we would be discussing on how to build a basic serv
 
 ### 1. Check your go environment
 Ensure you have go installed
-```
+```shell
 go version
 ```
 
 ### 2. Create a new project
-```
+```shell
 mkdir testProject
 cd testProject
 ```
 
 ### 3. Initialise Go Module
 You can keep the name of the module same as your project or you can select a custom. It will create a `go.mod` file based on the module defined in the command
-```
+```shell
 go mod init myModule
 ```
 
 ### 4. Install golly package
 you would be required to install the golly package in order to use the turbo library
-```
+```shell
 go get oss.nandlabs.io/golly
 ```
 
 Your `go.mod` file would like below
-```
+```shell filename="go.mod"
 module myModule
 
 go 1.22.4
@@ -56,12 +56,12 @@ require oss.nandlabs.io/golly v1.0.0
 ## Start building a simple server using turbo
 
 ### 1. Create a Main Go file
-```
+```shell
 touch main.go
 ```
 
 ### 2. Write your simple server following the instructions
-```
+```go
 package main
 
 import (
@@ -105,18 +105,18 @@ A few things to note,
 2. You use that router object and register your desired routes in your server. Multiple methods have been exposed and detailed explanation can be found in the **turbo** documentation.
 
 ### 3. Running your server
-```
+```shell
 go run main.go
 ```
 Running the server will generate the logs like below
-```
+```shell
 [timestamp] INFO Initiating Turbo
 [timestamp] INFO Registering New Route: /api/v1/healthz
 ```
 You can see the list of registered routes on your server
 
 ### 4. Invoking your API
-```
+```shell
 curl http://localhost:8080/api/v1/healthz
 ```
 generates the following response
@@ -132,7 +132,7 @@ generates the following response
 - Looking forward to your contributions..
 
 ### Project Details
-[Project Link] - (https://github.com/nandlabs/golly)
+[Project Link](https://github.com/nandlabs/golly)
 
 This was a basic server registration and a simple GET endpoint implementation using **turbo**.
 There are a lot of customisations and features which we will discuss in the coming parts of **turbo** in the series.

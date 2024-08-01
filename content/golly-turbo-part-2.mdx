@@ -1,0 +1,83 @@
+---
+title: "Deep Dive into Golly: turbo (Part - 2)"
+publishedAt: "2024-08-01"
+summary: "golly: turbo part - 2"
+---
+
+**[turbo](https://github.com/nandlabs/golly/tree/main/turbo)** has a wide range of functionalities inbuilt which you can leverage to improve your application development.
+
+Once you have created the object of turbo
+```go
+router := tubro.NewRouter()
+```
+An instance of turbo is created which is used as an handler to the http.Server object below
+```go
+srv := &http.Server{
+	Handler:      router,
+	Addr:         ":8080",
+	ReadTimeout:  20 * time.Second,
+	WriteTimeout: 20 * time.Second,
+}
+```
+Multiple configurations can be done on the http.Server object above based on the requirements and specifications.
+Some of the configurations that you can provide are TLSConfig, IdleTimeout, ReadHeaderTimeout etc.
+More information regarding the http.Server object can be found in the [documentation](https://pkg.go.dev/net/http#Server).
+
+Now that the server has been configured, API routes need to be registered to the server in order to process those requests.
+
+---
+
+There are multiple ways with which we can add routes to our server handler.
+1. Adding routes based on different HTTP Methods
+2. Multiple HTTP Methods Registering
+
+### Adding routes based on different HTTP Methods
+turbo supports all the basic HTTP methods needed to build an application, and you can follow the below ways on how to register a particular route
+
+> Any route that gets added using below format, contains 2 parameters
+> 1. the path of the API
+> 2. the handler which processes the request
+
+1. Add a GET route
+```go
+router.Get("api/v1/users", getUsers)
+```
+2. Add a POST route
+```go
+router.Post("api/v1/users", addUser)
+```
+3. Add a PUT route
+```go
+router.Put("api/v1/users/:id", updateUser)
+```
+4. Add a DELETE route
+```go
+router.Delete("api/v1/users/:id", deleteUser)
+```
+
+
+### Multiple HTTP Methods Registering
+Router lets you register same handler with multiple methods such as ("POST", "PUT") for a single endpoint.
+With the help of Add function that can be achieved
+```go
+router.Add("/api/v1/users", handleCustomers, "PUT", "POST")
+```
+---
+
+### Contributing
+
+- To contribute to samples, please follow the [Repository](https://github.com/nandlabs/golly-samples)
+- Any suggestions to improve the library are welcomed, we want this to be a community driven project and help it grow.
+- If you feel any improvements in the package, feel free to raise the PR - [Project](https://github.com/nandlabs/golly/tree/main)
+- If you find any bugs that we may have missed, feel free to raise the issues - [Raise an Issue](https://github.com/nandlabs/golly/blob/main/.github/ISSUE_TEMPLATE/bug_report.md)
+- Looking forward to your contributions..
+
+### Project Details
+Repository : [golly-samples](https://github.com/nandlabs/golly-samples)
+
+This was an in-depth description of different ways you can register routes in **turbo**.  
+We will be discussing how to read query params, path params and adding filters to the **turbo** in the next post.
+
+Stay Tuned!!🕵🏻‍♂️
+
+And if you have any questions, I am happy to answer🚀
