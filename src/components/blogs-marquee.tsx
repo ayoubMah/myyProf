@@ -88,7 +88,7 @@ export function BlogsMarquee() {
     }, [])
 
     return (
-        <div className="relative flex h-[400px] w-full flex-col items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl">
+        <div className="relative flex h-[400px] w-full flex-col items-center justify-center overflow-hidden">
             <Marquee pauseOnHover className="[--duration:30s]">
                 {blogData.map((review) => (
                     <ReviewCard key={review.username} {...review} />
