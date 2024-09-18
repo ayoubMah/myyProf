@@ -127,19 +127,22 @@ export const DATA = {
     ],
     projects: [
         {
-            title: "Go Struct Validator",
-            href: "https://github.com/neo7337/go-struct-validator",
-            dates: "Jan 2022 - Oct 2023",
+            title: "trekYourWorld",
+            href: "https://github.com/neo7337/trekYourWorld",
+            dates: "May 2024 - Present",
             active: true,
             description:
-                "An Open-Source Golang structs validation library based on the core OpenAPI Specification (OAS). Inspired by the OAS approach, it facilitates the creation of generic structs and ensures comprehensive validation according to OAS standards.",
+                "TrekYourWorld is an open source project made for the trekking/hiking community.",
             technologies: [
-                "Golang"
+                "Node.js",
+                "NestJS",
+                "React",
+                "MongoDB"
             ],
             links: [
                 {
                     type: "Website",
-                    href: "https://pkg.go.dev/github.com/neo7337/go-struct-validator",
+                    href: "https://trekyourworld.com",
                     icon: <Icons.globe className="size-3" />,
                 },
             ],
@@ -168,6 +171,27 @@ export const DATA = {
             video:
                 "",
         },
+        {
+            title: "Go Struct Validator",
+            href: "https://github.com/neo7337/go-struct-validator",
+            dates: "Jan 2022 - Oct 2023",
+            active: true,
+            description:
+                "An Open-Source Golang structs validation library based on the core OpenAPI Specification (OAS). Inspired by the OAS approach, it facilitates the creation of generic structs and ensures comprehensive validation according to OAS standards.",
+            technologies: [
+                "Golang"
+            ],
+            links: [
+                {
+                    type: "Website",
+                    href: "https://pkg.go.dev/github.com/neo7337/go-struct-validator",
+                    icon: <Icons.globe className="size-3" />,
+                },
+            ],
+            image: "",
+            video:
+                "",
+        }
     ],
     hackathons: []
 } as const;
