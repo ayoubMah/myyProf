@@ -132,7 +132,7 @@ export const DATA = {
             dates: "May 2024 - Present",
             active: true,
             description:
-                "TrekYourWorld is an open source project made for the trekking/hiking community.",
+                "trekYourWorld is an open source project made for the trekking/hiking community.",
             technologies: [
                 "Node.js",
                 "NestJS",

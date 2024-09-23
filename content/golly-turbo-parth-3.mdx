@@ -1,0 +1,77 @@
+---
+title: "Deep dive into Golly: Turbo (Part - 3)"
+publishedAt: "2024-09-23"
+summary: "golly: turbo part - 3"
+---
+
+## Turbo Router: Path Params, Query Params, and Middlewares
+
+Welcome to the third and final part of our blog series on Turbo. In the first two parts, we covered the core utilities of Turbo, focusing on client handling, logging, messaging, and other foundational aspects. Now, we're diving into one of the most crucial components of any web framework—routing.
+
+In this post, we'll explore Turbo Router, a high-performance routing utility for Golang. We'll cover how to work with path parameters, query parameters, and how to efficiently manage your application's flow using middlewares and filters.
+
+By the end of this article, you'll have a strong understanding of how to leverage Turbo Router to build scalable and maintainable web applications.
+
+### 1. Handling Path Parameters
+Path parameters (also called URL parameters) allow us to capture values in the URL directly. For example, in a URL like /users/123, the value 123 is a dynamic path parameter representing a user ID.
+
+With Turbo Router, handling path parameters is simple. You define your routes with placeholders for dynamic segments.
+
+Here's how to define a route with path parameters:
+
+```go
+router := turbo.NewRouter()
+
+router.Get("/users/:id")
+```
+
+In this example:
+
+1. The :id in the route "/users/:id" captures the path parameter.
+2. To fetch the path param, internal function is provided `getIntPathParms(id string, r *http.Request) int {}` where you pass in the path param string key and fetch the `Int` value.
+3. When a request is made to /users/123, the handler receives 123 as the userID.
+
+### 2. Working with Query Parameters
+Query parameters are a powerful way to pass data in a URL without making the path dynamic. They appear after a ? in the URL, like /search?query=golang.
+
+With Turbo Router, accessing query parameters is straightforward:
+```go
+router.Get("/search", handlerFunc (w http.ResponseWriter, r *http.Request) {
+    val, err := GetQueryParams("query", r)
+})
+```
+In this case:
+
+GetQueryParams("query", r) fetches the value of the query parameter query.
+
+### 3. Using Middlewares and Filters
+Middlewares are functions that run before your route handler. They allow you to perform actions like authentication, logging, or modifying the request/response. With Turbo Router, you can apply middlewares globally or to specific routes.
+
+To define a simple middleware:
+```go
+func LoggerMiddleware(next http.Handler) http.Handler {
+  return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+      logger.Info("Filter Added")
+      logger.Info(r.RequestURI)
+      next.ServeHTTP(w, r)
+      logger.Info("Filter Added again")
+  })
+}
+```
+
+In this example:
+
+`LoggerMiddleware` logs the Request URL for each request before calling the next handler.
+
+If you want to apply it to a specific route:
+```go
+turboRouter := turbo.NewRouter()
+turboRouter.Get("/api/v1", ResponseHandler).AddFilter(LoggerMiddleware)
+```
+
+### Conclusion
+Turbo Router is a powerful yet simple tool for routing in Golang applications. With support for dynamic Path Parameters, easy-to-access Query Parameters, and flexible Middlewares, you can build robust, scalable web applications. By leveraging these features, you can keep your code clean, efficient, and maintainable.
+
+Whether you're building a small API or a large web application, Turbo Router can streamline your routing and middleware setup, allowing you to focus more on the logic that matters.
+
+Happy coding!
