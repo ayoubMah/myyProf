@@ -1,0 +1,257 @@
+---
+title: "Golang : Building a REST API"
+publishedAt: "2024-10-23"
+summary: "golang-rest-api"
+---
+
+### Why Choose Go (Golang) for Server-Side Development?
+
+Choosing Go (Golang) for server-side development is often driven by its key strengths:
+
+- **Performance:** Go's concurrency model, based on goroutines and channels, allows for efficient handling of multiple tasks simultaneously, making it ideal for high-performance server applications.
+
+- **Simplicity:** The language is designed to be simple and easy to read, with minimalistic syntax. This makes it easier to maintain, even for large projects. 
+
+- **Fast Compilation and Execution:** Go compiles directly to machine code, resulting in fast execution times compared to interpreted languages like Python or Node.js. 
+
+- **Scalability:** Go's built-in concurrency and lightweight nature make it a good choice for building scalable services that can handle a large number of requests. 
+
+- **Strong Standard Library:** Go comes with a powerful standard library, particularly for building networked services, handling HTTP, and managing concurrency, reducing the need for external dependencies.
+
+These factors make Go a great fit for modern server-side applications, especially when performance and scalability are important.
+
+### How to build a REST API server in Golang?
+
+There are a lot of frameworks present to build your REST API Servers in Golang like Gin, Gorrilla-Mux and many other.
+
+We would be using a new framework `golly` which gives a comprehensive set of tools to build your `Golang applications`.
+
+**Let's deep dive into the implementation**
+
+Desired APIs we want to build
+
+```bash
+GET /api/v1/users
+POST /api/v1/users
+PUT /api/v1/users/:id
+DELETE /api/v1/users/:id
+```
+
+Once we have defined our needed APIs, we start by initiating out go project. Use the following commands:-
+
+```bash
+mkdir my-go-server
+cd my-go-server
+go mod init rest_server
+
+go get oss.nandlabs.io/golly
+```
+
+Once you perform the above action you should be able to see a folder structure like below
+
+![Initial Folder Structure](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/4e0pa1d3n3ep7qr4szye.png)
+
+Now we can start creating our desired server structure
+
+Create a `main.go` file which contains the `main()` i.e. the entry point of your golang application
+
+```go
+package main
+
+import "rest_server/server"
+
+func main() {
+        // create the instance of your server
+	srv := server.NewServer()
+        // start your server
+	srv.Start()
+}
+```
+
+Create a `/server/server.go` file which contains your server configuration
+
+```go
+package server
+
+import (
+	"rest_server/handlers"
+	"rest_server/store"
+
+	"oss.nandlabs.io/golly/lifecycle"
+	"oss.nandlabs.io/golly/rest/server"
+)
+
+type Server struct {
+	store *store.Store
+}
+
+func NewServer() *Server {
+	return &Server{
+		store: store.NewStore(),
+	}
+}
+
+func (s *Server) Start() {
+	// register the router by creating the server object
+	restServer, err := server.Default()
+	if err != nil {
+		panic(err)
+	}
+
+	// Add path prefix if you want
+	restServer.Opts().PathPrefix = "/api/v1"
+
+	// register routes
+	restServer.Get("/users", handlers.GetUsers)
+	restServer.Post("/users", handlers.AddUser)
+	restServer.Put("/users/:id", handlers.UpdateUser)
+	restServer.Delete("/users/:id", handlers.DeleteUser)
+
+	// create the http.Server object and register the router as Handler
+	// provide the necessary configurations such as PORT, ReadTimeout, WriteTimeout...
+	manager := lifecycle.NewSimpleComponentManager()
+
+	// Register the server
+	manager.Register(restServer)
+
+	// start the server
+	manager.StartAndWait()
+}
+
+```
+
+The application structure you would want to achieve is like below
+
+![Desired Application Structure](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/10nunwrzwznrmlyr2956.png)
+
+Create a in-memory store under `/store/store.go` in order to test your CRUD operations.
+
+```go
+package store
+
+import "rest_server/models"
+
+type Store struct {
+	data map[string]models.Item
+}
+
+var initStore *Store
+
+func NewStore() *Store {
+	initStore = &Store{data: make(map[string]models.Item)}
+	return initStore
+}
+
+func GetStore() *Store {
+	return initStore
+}
+
+func (s *Store) GetAll() []models.Item {
+	items := []models.Item{}
+	for _, item := range s.data {
+		items = append(items, item)
+	}
+	return items
+}
+
+func (s *Store) GetById(id string) (item models.Item, exists bool) {
+	item, exists = s.data[id]
+	return
+}
+
+func (s *Store) Put(id string, item models.Item) {
+	s.data[id] = item
+}
+
+func (s *Store) Delete(id string) {
+	delete(s.data, id)
+}
+```
+
+This would refer to the models present under `/models/item.go`
+```go
+package models
+
+type Item struct {
+	ID    string `json:"id"`
+	Value string `json:"value"`
+}
+```
+
+The handlers would contain the handler for each endpoint defined under `/server/server.go`.
+
+One such implementation of a `/handlers/AddUser.go` is below
+```go
+package handlers
+
+import (
+	"encoding/json"
+	"net/http"
+
+	"rest_server/models"
+	"rest_server/response"
+	"rest_server/store"
+
+	"oss.nandlabs.io/golly/rest/server"
+	"oss.nandlabs.io/golly/uuid"
+)
+
+func AddUser(ctx server.Context) {
+	// create the model type variable
+	var item models.Item
+	// decode the request body to the item reference
+	if err := json.NewDecoder(ctx.GetRequest().Body).Decode(&item); err != nil {
+		// in case of error write the error to the response and return
+		response.Error(ctx.HttpResWriter(), http.StatusBadRequest, "invalid request payload")
+		return
+	}
+
+	// get the store object 
+	initStore := store.GetStore()
+
+	uuid, err := uuid.V1()
+	if err == nil {
+		// assign the uuid generated to the item
+		item.ID = uuid.String()
+		// add the input body item to the store
+		initStore.Put(item.ID, item)
+		// generate a success response
+		response.JSON(ctx.HttpResWriter(), http.StatusCreated, item)
+	} else {
+		// generate the error response
+		response.Error(ctx.HttpResWriter(), http.StatusBadRequest, "error generating uuid")
+		return
+	}
+}
+```
+
+Similarly, you can create other handlers with the desired logic.
+
+Full example can be found on this [github repository](https://github.com/nandlabs/golly-samples/tree/main/rest-server/server-routing)
+
+Once you have created your server, you can start your server using below command
+```bash
+cd /my-go-server
+
+go run main.go
+```
+
+Output should be like below
+
+![Server Startup Logs](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/dfyso70d6q7jlthw89lo.png)
+You can see the registered endpoints and where the server is started.
+
+Once the Server is started, you can use Postman or Curl command to invoke your APIs.
+
+You can see how quickly we were able to spin-up a REST server using `golly` framework in golang.
+
+**Benefits of using `golly` as my go-to framework to build go application**
+
+- All the libraries used be it lifecycle management, UUID generation, logging, rest-server management and many more is provided out of the box by `golly`.
+- Large number of inbuilt libraries present, where I don't have to import multiple third party libraries which keeps my go.mod clean and managable.
+- Simple and quick implementation of the modules, easy learning curve.
+- Open source library
+
+For more details about golly, visit the repository [Golly](https://github.com/nandlabs/golly). You can checkout the code and feel free to contribute!
+
+Thank you for reading this article!!

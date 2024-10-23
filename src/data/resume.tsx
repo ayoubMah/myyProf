@@ -43,22 +43,19 @@ export const DATA = {
                 name: "GitHub",
                 url: "https://github.com/neo7337",
                 icon: Icons.github,
-
                 navbar: true,
             },
             LinkedIn: {
                 name: "LinkedIn",
                 url: "https://www.linkedin.com/in/adi-kumar/",
                 icon: Icons.linkedin,
-
                 navbar: true,
             },
             X: {
                 name: "X",
-                url: "",
+                url: "https://x.com/adityak007mr",
                 icon: Icons.x,
-
-                navbar: false,
+                navbar: true,
             },
             Youtube: {
                 name: "Youtube",
@@ -190,7 +187,7 @@ export const DATA = {
             ],
             image: "",
             video:
-                "",
+                "/projects/go-struct-validator.mp4",
         }
     ],
     hackathons: []
